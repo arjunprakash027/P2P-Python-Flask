@@ -91,7 +91,7 @@ enter a arthemetic query
 
 
 if __name__ == "__main__":
-    sio.connect('http://127.0.0.1:5000')
+    sio.connect('https://c885-2405-201-e007-2101-c437-a12-1c18-f422.ngrok-free.app/')
     time.sleep(3)
     
     sio_thread = threading.Thread(target = sio.wait)
