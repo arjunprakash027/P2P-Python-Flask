@@ -17,6 +17,13 @@ pool = peer_pool()
 def handle_connect():
     print(f"{request.sid} hopped in") 
 
+@socketio.on('disconnect')
+def handle_disconnect():
+    print(f"{request.sid} hopped out")
+    pool.remove_peer(request.sid)
+    print(pool.show_all_peers())
+    #emit('update_peers',pool.show_all_peers(),broadcast=True)
+
 @socketio.on('peer_info')
 def peer_info(system_info):
     sys_info = system_info[0]

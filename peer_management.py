@@ -7,6 +7,10 @@ class peer_pool:
             'specifications':specifications,
             'availiblity':True
         }
+
+    def remove_peer(self,sid) -> None:
+        if sid in self.pool:
+            del self.pool[sid]
     
     def show_all_peers(self) -> None:
         return self.pool

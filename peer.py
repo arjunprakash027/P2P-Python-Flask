@@ -100,6 +100,7 @@ if __name__ == "__main__":
     while continue_peer:
         interface()
     
+    sio.emit('disconnect')
     sio.disconnect()
     sio_thread.join()
     
