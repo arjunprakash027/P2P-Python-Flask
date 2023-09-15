@@ -4,6 +4,7 @@ from peer_management import peer_pool
 import logging
 from logging.handlers import RotatingFileHandler
 import time
+import pickle
 
 app = Flask(__name__)
 file_handler = RotatingFileHandler('flask_app.log', maxBytes=1024 * 1024, backupCount=3)
@@ -63,6 +64,16 @@ def perform_computation(data):
         print(f"server got the answer from {request.sid} and the anser is {answer}")
         emit('job_done',answer,room=req_peer)
         pool.mark_peer_available(provider)
+
+@socketio.on('perform_ml')
+def perform_ml(data):
+    req_peer = request.sid
+    serialized_data = data['serialized_data']
+    provider = data['provider']
+    # print(serialized_data)
+    # print(provider)
+    emit('ml_job',serialized_data,room=provider)
+    
 
 if __name__ == "__main__":
     socketio.run(app,debug=True)

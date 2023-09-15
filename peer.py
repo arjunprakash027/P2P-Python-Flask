@@ -2,8 +2,12 @@ import socketio
 import gpuinfo
 import threading
 import time
+from serialize_csv import csv_to_byte
+import pickle
+import pandas
 
 sio = socketio.Client()
+
 
 #events code block ----------------
 provider = None
@@ -23,7 +27,7 @@ def assigned_compute(selected_sid):
     if selected_sid == "None":
         print("sorry all peers are busy")
     else:
-        print("A compute has been assigned to you:",selected_sid)
+        print("A compute has been assigned to you:{}\n".format(selected_sid))
         provider = selected_sid
 
 @sio.on('job')
@@ -37,7 +41,7 @@ def perform_task(query):
 
 @sio.on('get_all_peers')
 def get_all_peers(all_peers):
-    print(all_peers)
+    #print(all_peers)
     for peer,specs in all_peers.items():
         if specs['availiblity']:
             print("peer:",peer)
@@ -49,6 +53,13 @@ def jon_done(answer):
     else:
         print("the answer is:",answer)
 
+@sio.on('ml_job')
+def perform_ml_job(serialized_data):
+    data = pickle.loads(serialized_data)
+    df = pandas.DataFrame(data)
+    print(df)
+    df.to_csv('output.csv')
+    
 #events code block end -------------
 
 
@@ -64,9 +75,11 @@ def interface():
         options = """
 Select from the below options
 
-1 -> give some task
-2 -> show all peers
-3 -> Stop the server
+1 -> Stop the server
+2 -> give some task
+3 -> show all peers
+4 -> Train a model
+
 
 
 """
@@ -77,21 +90,29 @@ enter a arthemetic query
 
         option = int(input(options))
 
-        if option == 1:
+        if option == 2:
             get_compute_peer()
             query = str(input("enter query:"))
             data = {"query":query,"provider":provider}
             sio.emit('perform_computation',data)
-        elif option == 3:
+        elif option == 1:
             continue_peer = False
-        elif option == 2:
+        elif option == 3:
             sio.emit('show_all_peers')
+        elif option == 4:
+            get_compute_peer()
+            path = str(input("enter path of the csv file:"))
+            serialized_data = csv_to_byte(path)
+            #print(serialized_data)
+            data = {"serialized_data":serialized_data,"provider":provider}
+            sio.emit("perform_ml",data)
+
         else:
             print("option not available")
 
 
 if __name__ == "__main__":
-    sio.connect('https://c885-2405-201-e007-2101-c437-a12-1c18-f422.ngrok-free.app/')
+    sio.connect('http://127.0.0.1:5000')
     time.sleep(3)
     
     sio_thread = threading.Thread(target = sio.wait)
