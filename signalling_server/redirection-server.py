@@ -48,14 +48,17 @@ def check_available_peers():
     number = 0
     for i in avilable_peers:
         if req_peer != i:
-            total_peers[number] = {"sid":i,"peer_details":avilable_peers[i]}
-            number += 1
+            if avilable_peers[i]['availiblity']:
+                total_peers[number] = {"sid":i,"peer_details":avilable_peers[i]}
+                number += 1
+    pool.mark_peer_busy(req_peer)
     emit('get_all_peers',total_peers,room=request.sid)
 
     @socketio.on('get_particular_peer')
     def get_particular_peer(data):
         p_number = data['p_number']
         print(selected_peer := total_peers[p_number]['sid'])
+        pool.mark_peer_busy(selected_peer)
         sender_name = total_peers[p_number]['peer_details']['name']
         emit('let_me_know',{'peer':req_peer},room=selected_peer)
         emit('get_connected_sid',{'peer':selected_peer},room=req_peer)
