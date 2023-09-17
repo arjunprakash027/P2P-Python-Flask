@@ -1,6 +1,7 @@
 import socketio
 import threading
 import time
+import PyQt5
 
 sio = socketio.Client()
 
@@ -84,11 +85,11 @@ enter a arthemetic query
                 sio.emit('get_particular_peer', {'p_number': peer_number})
                 print("peer connected")
                 @sio.on('get_connected_sid')
-
                 def get_connected_sid(data):
                     global friend
                     friend = data['peer']
                     print("friend:",friend)
+
                 while True:
                     message = str(input(""))
                     sio.emit('send_message',{'message':message,'receiver':friend})

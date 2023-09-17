@@ -25,6 +25,7 @@ def handle_disconnect():
 @socketio.on('peer_info')
 def peer_info(system_info):
     name = system_info['name']
+    print("name",name)
     pool.add_peer(request.sid,name)
     print(pool.show_all_peers())
     #emit('update_peers',pool.show_all_peers(),broadcast=True)
@@ -37,6 +38,7 @@ def show_peers():
     for i in avilable_peers:
         total_peers[number] = {"sid":i,"peer_details":avilable_peers[i]}
         number += 1
+    print("total peers:",total_peers)
     emit('get_all_peers',total_peers,room=request.sid)
 
 @socketio.on('select_available_peers')
@@ -51,15 +53,18 @@ def check_available_peers():
             if avilable_peers[i]['availiblity']:
                 total_peers[number] = {"sid":i,"peer_details":avilable_peers[i]}
                 number += 1
-    pool.mark_peer_busy(req_peer)
+    
     emit('get_all_peers',total_peers,room=request.sid)
 
     @socketio.on('get_particular_peer')
     def get_particular_peer(data):
+        print("data:",data)
+        print(total_peers)
         p_number = data['p_number']
-        print(selected_peer := total_peers[p_number]['sid'])
+        print(selected_peer := total_peers[int(p_number)]['sid'])
+        sender_name = total_peers[int(p_number)]['peer_details']['name']
         pool.mark_peer_busy(selected_peer)
-        sender_name = total_peers[p_number]['peer_details']['name']
+        pool.mark_peer_busy(request.sid)
         emit('let_me_know',{'peer':req_peer},room=selected_peer)
         emit('get_connected_sid',{'peer':selected_peer},room=req_peer)
 
