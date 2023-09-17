@@ -90,7 +90,7 @@ class SelectPeerWindow(QMainWindow):
 
         font = QFont()
         font.setBold(True)
-        font.setPointSize(16)  # Adjust the font size as needed
+        font.setPointSize(16)  
 
         self.label = QLabel(parent=self.mainWidget)
         self.label.setText(f"Hello, {name}!")
@@ -98,8 +98,16 @@ class SelectPeerWindow(QMainWindow):
         self.label.setFont(font)
         self.label.setAlignment(Qt.AlignTop | Qt.AlignCenter)
 
+
+        self.label_inform = QLabel(parent=self.mainWidget)
+        self.label_inform.setText(f"select your peer from the list please!")
+        self.label_inform.setGeometry(350, 350, 350, 30)
+        self.label_inform.setFont(font)
+        self.label.setAlignment(Qt.AlignCenter)
+
         self.peer_layout = QVBoxLayout()
         self.mainWidget.setLayout(self.peer_layout)
+
 
         sio.emit("select_available_peers")
         sio.on('get_all_peers', self.handle_update_peers)
