@@ -40,7 +40,7 @@ pip install PyQt5 Flask Flask-SocketIO
 1. Clone the GitHub repository to your local machine:
 
 ```bash
-git clone https://github.com/arjunprakash027/P2P-Python-Flask/tree/v1.0.1
+git clone https://github.com/arjunprakash027/P2P-Python-Flask/tree/main
 ```
 
 2. Navigate to the project directory:
