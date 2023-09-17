@@ -59,6 +59,13 @@ class ChatWindow(QMainWindow):
 
         central_widget.setLayout(layout)
 
+        self.developed_by_label = QLabel(self.mainWidget)
+        self.developed_by_label.setText('<a href="https://github.com/arjunprakash027">Developed with love by Arjun</a>')
+        self.developed_by_label.setOpenExternalLinks(True)
+        self.developed_by_label.setFont(QFont("Arial", 10))
+        self.developed_by_label.setAlignment(Qt.AlignRight | Qt.AlignBottom)
+        self.developed_by_label.setGeometry(550, 670, 400, 20)
+
         sio.on('recv_message', self.handle_recv_message)
         signal_handler.recv_message_signal.connect(self.recv_message)
 
@@ -107,6 +114,13 @@ class SelectPeerWindow(QMainWindow):
 
         self.peer_layout = QVBoxLayout()
         self.mainWidget.setLayout(self.peer_layout)
+
+        self.developed_by_label = QLabel(self.mainWidget)
+        self.developed_by_label.setText('<a href="https://github.com/arjunprakash027">Developed with love by Arjun</a>')
+        self.developed_by_label.setOpenExternalLinks(True)
+        self.developed_by_label.setFont(QFont("Arial", 10))
+        self.developed_by_label.setAlignment(Qt.AlignRight | Qt.AlignBottom)
+        self.developed_by_label.setGeometry(550, 670, 400, 20)
 
 
         sio.emit("select_available_peers")
@@ -181,6 +195,13 @@ class MyApp(QMainWindow):
         
         self.peer_windows = []  # Store references to peer windows
 
+        self.developed_by_label = QLabel(self)
+        self.developed_by_label.setText('<a href="https://github.com/arjunprakash027">Developed with love by Arjun</a>')
+        self.developed_by_label.setOpenExternalLinks(True)
+        self.developed_by_label.setFont(QFont("Arial", 10))
+        self.developed_by_label.setAlignment(Qt.AlignRight | Qt.AlignBottom)
+        self.developed_by_label.setGeometry(550, 670, 400, 20)
+
 
     def onTextChanged(self):
         self.text = self.name_enter.text()
@@ -192,6 +213,10 @@ class MyApp(QMainWindow):
         select_peer_window.show()  # Show the new window
         self.name_enter.hide()
 
+    def closeEvent(self, close):
+        sio.disconnect() 
+        print("app closed succussfully, thank you for using!")
+        close.accept()
 def main():
     app = QApplication(sys.argv)
     window = MyApp()
