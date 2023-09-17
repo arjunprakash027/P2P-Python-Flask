@@ -58,7 +58,8 @@ def check_available_peers():
         print("data:",data)
         print(total_peers)
         p_number = data['p_number']
-        print(selected_peer := total_peers[int(p_number)]['sid'])
+        selected_peer = total_peers[int(p_number)]['sid']
+        print(selected_peer)
         sender_name = total_peers[int(p_number)]['peer_details']['name']
         pool.mark_peer_busy(selected_peer)
         pool.mark_peer_busy(request.sid)
